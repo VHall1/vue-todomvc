@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useTodoStore } from "@/stores/todo";
 import type { Todo } from "@/types";
 import { EditIcon, TrashIcon } from "lucide-vue-next";
 import { nextTick, ref } from "vue";
 
 const props = defineProps<{ todo: Todo }>();
 const emit = defineEmits<{
+  (e: "delete-todo", id: string): void;
   (
     e: "update-todo",
     payload: {
@@ -15,8 +15,6 @@ const emit = defineEmits<{
     },
   ): void;
 }>();
-
-const { deleteTodo } = useTodoStore();
 
 const isEdit = ref(false);
 const editInput = ref<HTMLInputElement | null>(null);
@@ -83,7 +81,7 @@ function handleDoneChange(ev: Event) {
       </button>
       <button
         class="px-2 py-1 text-xs bg-red-500 text-white rounded"
-        @click.stop="deleteTodo(todo.id)"
+        @click.stop="emit('delete-todo', todo.id)"
       >
         <TrashIcon />
       </button>

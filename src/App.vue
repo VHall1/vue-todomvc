@@ -3,12 +3,12 @@ import TodoItem from "@/components/TodoItem.vue";
 import { ref } from "vue";
 import { useTodoStore } from "./stores/todo";
 
-const { todos, createTodo, updateTodo } = useTodoStore();
+const store = useTodoStore();
 
 const newTodo = ref("");
 const handleNewTodo = (payload: KeyboardEvent) => {
   if (payload.key !== "Enter") return;
-  createTodo(newTodo.value);
+  store.createTodo(newTodo.value);
   newTodo.value = "";
 };
 </script>
@@ -28,8 +28,12 @@ const handleNewTodo = (payload: KeyboardEvent) => {
     </div>
 
     <div class="mt-5">
-      <div v-for="todo in todos" :key="todo.id" class="py-4">
-        <TodoItem :todo="todo" @update-todo="({ id, ...payload }) => updateTodo(id, payload)" />
+      <div v-for="todo in store.todos" :key="todo.id" class="py-4">
+        <TodoItem
+          :todo="todo"
+          @update-todo="({ id, ...payload }) => store.updateTodo(id, payload)"
+          @delete-todo="store.deleteTodo"
+        />
       </div>
     </div>
   </div>
