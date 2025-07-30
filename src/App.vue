@@ -1,34 +1,20 @@
 <script setup lang="ts">
 import { DeleteIcon, EditIcon } from "lucide-vue-next";
-import { v4 as uuid } from "uuid";
 import { ref } from "vue";
+import { useTodoStore } from "./stores/todo";
+
+const { todos, createTodo, deleteTodo } = useTodoStore();
+
+const hoveredTodoId = ref<string | null>(null);
+
+const editTodoId = ref<string | null>(null);
+const handleEdit = (id: string) => (editTodoId.value = id);
 
 const newTodo = ref("");
-const hoveredTodoId = ref<string | null>(null);
-const editTodoId = ref<string | null>(null);
-
-interface Todo {
-  id: string;
-  description: string;
-  done: boolean;
-}
-
-const todos = ref<Todo[]>([]);
-
 const handleKeydown = (payload: KeyboardEvent) => {
   if (payload.key !== "Enter") return;
-  todos.value.push({
-    id: uuid(),
-    description: newTodo.value,
-    done: false,
-  });
+  createTodo(newTodo.value);
   newTodo.value = "";
-};
-
-const editTodo = (id: string) => (editTodoId.value = id);
-
-const deleteTodo = (id: string) => {
-  todos.value = todos.value.filter((todo) => todo.id !== id);
 };
 </script>
 <template>
@@ -67,7 +53,7 @@ const deleteTodo = (id: string) => {
           <div v-if="hoveredTodoId === todo.id" class="ml-auto">
             <button
               class="ml-4 px-2 py-1 text-xs bg-blue-500 text-white rounded"
-              @click="editTodo(todo.id)"
+              @click="handleEdit(todo.id)"
             >
               <EditIcon />
             </button>
