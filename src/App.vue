@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import { DeleteIcon, EditIcon } from "lucide-vue-next";
 import { v4 as uuid } from "uuid";
 import { ref } from "vue";
 
 const newTodo = ref("");
 const hoveredTodoId = ref<string | null>(null);
+const editTodoId = ref<string | null>(null);
 
 interface Todo {
   id: string;
-  done: boolean;
   description: string;
+  done: boolean;
 }
 
 const todos = ref<Todo[]>([]);
@@ -23,10 +25,7 @@ const handleKeydown = (payload: KeyboardEvent) => {
   newTodo.value = "";
 };
 
-const editTodo = (id: string) => {
-  // Implement edit logic here
-  alert(`Edit todo: ${id}`);
-};
+const editTodo = (id: string) => (editTodoId.value = id);
 
 const deleteTodo = (id: string) => {
   todos.value = todos.value.filter((todo) => todo.id !== id);
@@ -55,19 +54,31 @@ const deleteTodo = (id: string) => {
           @mouseleave="hoveredTodoId = null"
         >
           <input :id="todo.id" class="size-10 mr-5" type="checkbox" v-model="todo.done" />
-          {{ todo.description }}
-          <button
-            v-if="hoveredTodoId === todo.id"
-            class="ml-4 px-2 py-1 text-xs bg-blue-500 text-white rounded"
-            @click.stop="editTodo(todo.id)"
-            style="position: absolute; right: 60px;"
-          >Edit</button>
-          <button
-            v-if="hoveredTodoId === todo.id"
-            class="ml-2 px-2 py-1 text-xs bg-red-500 text-white rounded"
-            @click.stop="deleteTodo(todo.id)"
-            style="position: absolute; right: 0;"
-          >Delete</button>
+
+          <input
+            v-if="editTodoId === todo.id"
+            @blur="editTodoId = null"
+            v-model="todo.description"
+          />
+          <span v-else>
+            {{ todo.description }}
+          </span>
+
+          <div v-if="hoveredTodoId === todo.id" class="ml-auto">
+            <button
+              class="ml-4 px-2 py-1 text-xs bg-blue-500 text-white rounded"
+              @click="editTodo(todo.id)"
+            >
+              <EditIcon />
+            </button>
+            <button
+              v-if="hoveredTodoId === todo.id"
+              class="ml-2 px-2 py-1 text-xs bg-red-500 text-white rounded"
+              @click="deleteTodo(todo.id)"
+            >
+              <DeleteIcon />
+            </button>
+          </div>
         </label>
       </div>
     </div>
