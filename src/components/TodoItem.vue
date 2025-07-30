@@ -10,8 +10,8 @@ const emit = defineEmits<{
     e: "update-todo",
     payload: {
       id: string;
-      description?: string;
-      done?: boolean;
+      description: string;
+      done: boolean;
     },
   ): void;
 }>();
@@ -37,7 +37,7 @@ const handleEditKeydown = (payload: KeyboardEvent) => {
 const handleEditEnd = () => {
   isEdit.value = false;
   if (editedDescription.value !== props.todo.description) {
-    emit("update-todo", { id: props.todo.id, description: editedDescription.value });
+    emit("update-todo", { ...props.todo, description: editedDescription.value });
   }
 };
 
@@ -48,7 +48,7 @@ const handleMouseLeave = () => (isHover.value = false);
 
 function handleDoneChange(ev: Event) {
   const target = ev.target as HTMLInputElement;
-  emit("update-todo", { id: props.todo.id, done: target.checked });
+  emit("update-todo", { ...props.todo, done: target.checked });
 }
 </script>
 <template>
