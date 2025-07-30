@@ -18,5 +18,12 @@ export const useTodoStore = defineStore("todo", () => {
     todos.value = todos.value.filter((todo) => todo.id !== id);
   };
 
-  return { todos, createTodo, deleteTodo };
+  const updateTodo = (id: string, payload: { description: string; done: boolean }) => {
+    todos.value = todos.value.map((t) => {
+      if (t.id !== id) return t;
+      return { ...t, description: payload.description, done: payload.done };
+    });
+  };
+
+  return { todos, createTodo, deleteTodo, updateTodo };
 });
