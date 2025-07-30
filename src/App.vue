@@ -39,27 +39,32 @@ const handleKeydown = (payload: KeyboardEvent) => {
           @mouseover="hoveredTodoId = todo.id"
           @mouseleave="hoveredTodoId = null"
         >
-          <input :id="todo.id" class="size-10 mr-5" type="checkbox" v-model="todo.done" />
+          <input
+            :id="todo.id"
+            class="size-10 mr-5 flex-shrink-0"
+            type="checkbox"
+            v-model="todo.done"
+          />
 
           <input
             v-if="editTodoId === todo.id"
             @blur="editTodoId = null"
             v-model="todo.description"
           />
-          <span v-else>
+          <span v-else class="text-balance">
             {{ todo.description }}
           </span>
 
-          <div v-if="hoveredTodoId === todo.id" class="ml-auto">
+          <div v-if="hoveredTodoId === todo.id" class="absolute right-0 flex gap-1">
             <button
-              class="ml-4 px-2 py-1 text-xs bg-blue-500 text-white rounded"
+              class="px-2 py-1 text-xs bg-blue-500 text-white rounded"
               @click="handleEdit(todo.id)"
             >
               <EditIcon />
             </button>
             <button
               v-if="hoveredTodoId === todo.id"
-              class="ml-2 px-2 py-1 text-xs bg-red-500 text-white rounded"
+              class="px-2 py-1 text-xs bg-red-500 text-white rounded"
               @click="deleteTodo(todo.id)"
             >
               <DeleteIcon />
